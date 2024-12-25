@@ -466,7 +466,7 @@ class MirrorLeechListener:
     ):
         user_id = self.message.from_user.id
         name, _ = await process_file(name, user_id, is_mirror=not self.is_leech)
-        msg = f"<i>{escape(name)}</i>\n"
+        msg = f"<b><i>{escape(name)}</i></b>\n"
         msg += f"<blockquote><b>• Size: </b>{get_readable_file_size(size)}\n"
         msg += f"<b>• Elapsed: </b>{get_readable_time(time() - self.message.date.timestamp())}\n"
         LOGGER.info(f"Task Done: {name}")
@@ -490,7 +490,7 @@ class MirrorLeechListener:
             else:
                 attachmsg = True
                 fmsg, totalmsg = "\n", ""
-                lmsg = "<b>Files have been sent. Access them via the provided links.</b>"
+                lmsg = "Files have been sent. Access them via the provided links."
                 for index, (dlink, name) in enumerate(files.items(), start=1):
                     fmsg += f"{index}. <a href='{dlink}'>{name}</a>\n"
                     totalmsg = (msg + lmsg + fmsg) if attachmsg else fmsg
