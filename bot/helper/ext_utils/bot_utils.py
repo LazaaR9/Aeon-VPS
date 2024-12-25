@@ -290,6 +290,28 @@ def get_readable_message():
         msg += f"\n<blockquote>/stop_{download.gid()[:8]}</blockquote>\n\n"
     if len(msg) == 0:
         return None, None
+    dl_speed = 0
+    up_speed = 0
+    for download in download_dict.values():
+            tstatus = download.status()
+            if tstatus == MirrorStatus.STATUS_DOWNLOADING:
+                spd = download.speed()
+                if 'K' in spd:
+                    dl_speed += float(spd.split('K')[0]) * 1024
+                elif 'M' in spd:
+                    dl_speed += float(spd.split('M')[0]) * 1048576
+            elif tstatus == MirrorStatus.STATUS_UPLOADING:
+                spd = download.speed()
+                if 'K' in spd:
+                    up_speed += float(spd.split('K')[0]) * 1024
+                elif 'M' in spd:
+                    up_speed += float(spd.split('M')[0]) * 1048576
+            elif tstatus == MirrorStatus.STATUS_SEEDING:
+                spd = download.upload_speed()
+                if 'K' in spd:
+                    up_speed += float(spd.split('K')[0]) * 1024
+                elif 'M' in spd:
+                    up_speed += float(spd.split('M')[0]) * 1048576
     if tasks > STATUS_LIMIT:
         buttons = ButtonMaker()
         buttons.callback("Prev", "status pre")
@@ -299,6 +321,8 @@ def get_readable_message():
     msg += f"<b>• Tasks</b>: {tasks}{bmax_task}"
     msg += f"\n<b>• Bot uptime</b>: {current_time}"
     msg += f"\n<b>• Free disk space</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
+    msg += f"\n<b>• Uploading speed</b>: {get_readable_file_size(up_speed)}/s"
+    msg += f"\n<b>• Downloading speed</b>: {get_readable_file_size(dl_speed)}/s"
     return msg, button
 
 
@@ -342,8 +366,8 @@ def get_readable_time(seconds, full_time=False):
         ("millennium", 31536000000),
         ("century", 3153600000),
         ("decade", 315360000),
-        ("y", 31536000),
-        ("m", 2592000),
+        ("year", 31536000),
+        ("month", 2592000),
         ("w", 604800),
         ("d", 86400),
         ("h", 3600),
@@ -355,7 +379,7 @@ def get_readable_time(seconds, full_time=False):
         if seconds >= period_seconds:
             period_value, seconds = divmod(seconds, period_seconds)
             plural_suffix = "s" if period_value > 1 else ""
-            result += f"{int(period_value)}{period_name}"
+            result += f"{int(period_value)} {period_name}{plural_suffix} "
             if not full_time:
                 break
     return result.strip()
