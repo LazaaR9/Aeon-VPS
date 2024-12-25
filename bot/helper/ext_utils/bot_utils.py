@@ -318,11 +318,11 @@ def get_readable_message():
         buttons.callback(f"{PAGE_NO}/{PAGES}", "status ref")
         buttons.callback("Next", "status nex")
         button = buttons.column(3)
-    msg += f"<b>• Tasks</b>: {tasks}{bmax_task}"
-    msg += f"\n<b>• Bot uptime</b>: {current_time}"
-    msg += f"\n<b>• Free disk space</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
-    msg += f"\n<b>• Uploading speed</b>: {get_readable_file_size(up_speed)}/s"
-    msg += f"\n<b>• Downloading speed</b>: {get_readable_file_size(dl_speed)}/s"
+    msg += f"<i><b>TASKS</b>: {tasks}{bmax_task}</i>"
+    msg += f"\n<b>BotUP</b>: {current_time} | "
+    msg += f"<b>Free</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
+    msg += f"\n<b>🔺 UL</b>: {get_readable_file_size(up_speed)}/s | "
+    msg += f"<b>🔻 DL</b>: {get_readable_file_size(dl_speed)}/s"
     return msg, button
 
 
