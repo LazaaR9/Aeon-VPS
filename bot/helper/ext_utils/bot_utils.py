@@ -379,7 +379,7 @@ def get_readable_time(seconds, full_time=False):
         if seconds >= period_seconds:
             period_value, seconds = divmod(seconds, period_seconds)
             plural_suffix = "s" if period_value > 1 else ""
-            result += f"{int(period_value)} {period_name}{plural_suffix} "
+            result += f"{int(period_value)}{period_name}"
             if not full_time:
                 break
     return result.strip()
